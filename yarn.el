@@ -66,6 +66,10 @@ NIL if they should be looked up from the global path"
   "Execute CALLBACK with the path set to YARN_EXECUTABLE_PATH."
   (when yarn-executable-path
     (setenv "PATH" (concat yarn-executable-path path-separator (getenv "PATH"))))
+  (when (and (eq 'start-process callback) (string-equal "*yarn*" (cadr args)))
+    (with-current-buffer (get-buffer-create "*yarn*")
+      (ansi-color-for-comint-mode-on)
+      (comint-mode)))
   (apply callback args))
 
 (defun yarn-git ()
